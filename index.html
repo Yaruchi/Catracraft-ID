@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catracraft ID</title>
+    <style>
+        body {
+            background-color: #361c20;
+            color: white;
+            font-family: "Times New Roman", Times, serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+        .title {
+            font-size: 36px;
+            font-weight: bold;
+            font-family: "Courier New", Courier, monospace;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .description {
+            font-size: 18px;
+            font-family: "Courier New", Courier, monospace;
+            line-height: 1.5;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .id-card {
+            width: 816px;
+            height: 489px;
+            background: url('background.png') no-repeat center center/cover;
+            border: 2px solid #361c20;
+            padding: 10px;
+            position: relative;
+            display: flex;
+            color: #361c20;
+        }
+        .text-section {
+            width: 70%;
+            padding: 40px;
+            font-size: 24px;
+            text-align: left;
+            line-height: 1;
+        }
+        .text-section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .profile-section {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-left: 2px solid #361c20;
+            border-radius: 0 10px 10px 0;
+        }
+        .id-card img {
+            width: 200px;
+            height: 200px;
+            border-radius: 20px;
+            border: 2px solid #361c20;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            background: #361c20;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #361c20;
+        }
+        input[type="text"], input[type="file"] {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+        }
+    </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link rel="icon" href="Catracraft-transparent.png" type="image/png">
+
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="title">Catracraft ID</h1>
+        <p class="description">Make your Official ID for Terra Celestia!<br>
+        The ID may appear large on mobile devices. We recommend using a PC.</p>
+        <div class="container">
+            <input type="text" id="name" placeholder="Enter Name">
+            <input type="text" id="discord" placeholder="Enter Discord Username">
+            <input type="text" id="username" placeholder="Enter In-Game Username">
+            <input type="file" id="imageInput" accept="image/*">
+            <div class="id-card" id="preview">
+                <div class="text-section">
+                    <h2>Catracraft</h2>
+                    <p id="displayName">Name: _______________<br><small>The Owner of this ID.</small></p>
+                    <p id="displayDiscord">Discord Username: _______________<br><small>Discord account username.</small></p>
+                    <p id="displayUsername">In-Game Username: _______________<br><small>Server member's in-game username.</small></p>
+                    <p id="displayDateTime">Registration Date and Time: </p>
+                </div>
+                <div class="profile-section">
+                    <img id="profilePic" src="" alt="Profile Picture">
+                </div>
+            </div>
+            <button onclick="downloadID()">Download ID</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('imageInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePic').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('name').addEventListener('input', function() {
+            let nameValue = this.value.trim();
+            document.getElementById('displayName').innerHTML = `Name: ${nameValue}<br><small>The Owner of this ID.</small>`;
+        });
+
+        document.getElementById('discord').addEventListener('input', function() {
+            let discordValue = this.value.trim();
+            document.getElementById('displayDiscord').innerHTML = `Discord Username: ${discordValue}<br><small>Discord account username.</small>`;
+        });
+
+        document.getElementById('username').addEventListener('input', function() {
+            let usernameValue = this.value.trim();
+            document.getElementById('displayUsername').innerHTML = `In-Game Username: ${usernameValue}<br><small>Server member's in-game username.</small>`;
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let today = new Date();
+            let formattedDate = ('0' + today.getDate()).slice(-2) + '/' + ('0' + (today.getMonth() + 1)).slice(-2) + '/' + today.getFullYear();
+            
+            let hours = today.getHours();
+            let minutes = today.getMinutes().toString().padStart(2, '0');
+            let seconds = today.getSeconds().toString().padStart(2, '0');
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12; // Convert to 12-hour format
+
+            let formattedTime = `${hours}:${minutes}:${seconds} ${ampm}`;
+            
+            document.getElementById('displayDateTime').textContent = `Registration Date and Time: ${formattedDate} ${formattedTime}`;
+        });
+
+        function downloadID() {
+            let idCard = document.getElementById('preview');
+
+            html2canvas(idCard, {
+                backgroundColor: null, // Ensures transparency
+                useCORS: true // Fixes background loading issues
+            }).then(canvas => {
+                let link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.download = 'ID_Card.png';
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>
